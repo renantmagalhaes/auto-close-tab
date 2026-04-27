@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auto Close Tab</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+  </head>
+  <body class="popup-page">
+    <div class="popup-container">
+      <!-- Header -->
+      <div class="header">
+        <h1>⏱️ Auto Close Tab</h1>
+        <div class="header-actions">
+          <button class="icon-button" id="themeToggle" title="Toggle theme">🌙</button>
+          <button class="icon-button" id="openSettings" title="Settings">⚙️</button>
+        </div>
+      </div>
+
+      <!-- Status/Quick Toggle -->
+      <div class="status-section">
+        <p class="status-message" id="statusMessage">Extension is Active</p>
+        <div class="status-toggle">
+          <label class="switch">
+            <input type="checkbox" id="extensionEnabled" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Tabs List Section -->
+      <div class="results-section">
+        <h2 class="section-label">Open Tabs (Click to Auto-Close)</h2>
+        <div class="results-list" id="tabsList">
+          <!-- Tabs will be injected here -->
+          <div class="state-box">
+            <span class="state-icon">🔄</span>
+            <p>Loading open tabs...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Rules Section -->
+      <div class="results-section">
+        <h2 class="section-label">Active Auto-Close Rules</h2>
+        <div class="results-list" id="rulesList">
+          <!-- Rules will be injected here -->
+          <div class="state-box">
+            <p>No active rules</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

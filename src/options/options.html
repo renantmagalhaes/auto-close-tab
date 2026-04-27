@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auto Close Tab Settings</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+  </head>
+  <body>
+    <div class="options-container">
+      <h1>⚙️ Extension Settings</h1>
+
+      <fieldset>
+        <legend>General Settings</legend>
+        <div class="form-group">
+          <label for="defaultTimer">Auto-close timer duration</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="number" id="defaultTimer" min="1" step="1" value="1" style="flex: 1;">
+            <select id="timerUnit" style="width: 120px;">
+              <option value="seconds">Seconds</option>
+              <option value="minutes" selected>Minutes</option>
+            </select>
+          </div>
+          <p class="form-hint">
+            Tabs matching a rule will close after this duration.
+          </p>
+        </div>
+        <button class="btn btn-primary btn-options" id="saveSettings" style="margin-top: 16px;">Save Settings</button>
+        <p id="saveMessage" class="message"></p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Manage Rules</legend>
+        <div id="rulesList" class="results-list">
+          <!-- Rules will be injected here -->
+        </div>
+      </fieldset>
+
+      <fieldset id="addRuleSection">
+        <legend id="addRuleLegend">Add New Rule</legend>
+        <div class="form-group">
+          <label for="newRuleValue">Rule Value (URL or Title snippet)</label>
+          <input type="text" id="newRuleValue" placeholder="e.g. youtube.com">
+        </div>
+        <div class="form-group">
+          <label for="newRuleType">Match Against</label>
+          <select id="newRuleType">
+            <option value="URL">URL</option>
+            <option value="Title">Page Title</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="newRuleMatch">Match Type</label>
+          <select id="newRuleMatch">
+            <option value="Contains">Contains</option>
+            <option value="Exact">Exact Match</option>
+            <option value="Regex">Regular Expression</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px;">
+          <input type="checkbox" id="newRuleKeepActive" checked style="width: auto;">
+          <label for="newRuleKeepActive" style="margin-bottom: 0;">Protect tab while in focus</label>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="btn btn-primary btn-options" id="addRule" style="flex: 1;">Add Rule</button>
+          <button class="btn btn-options" id="cancelEdit" style="display: none; flex: 1;">Cancel</button>
+        </div>
+      </fieldset>
+    </div>
+    <script src="options.js"></script>
+  </body>
+</html>
