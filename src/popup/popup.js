@@ -135,9 +135,45 @@ document.addEventListener('DOMContentLoaded', async () => {
           addRule(tab.url, tab.title, isProtected);
         });
 
+        // Hover Preview Logic (1s delay)
+        let hoverTimeout;
+        const info = row.querySelector('.item-info');
+        
+        info.addEventListener('mouseenter', () => {
+          hoverTimeout = setTimeout(() => {
+            showHoverPreview(tab.url, info);
+          }, 1000);
+        });
+
+        info.addEventListener('mouseleave', () => {
+          clearTimeout(hoverTimeout);
+          hideHoverPreview();
+        });
+
         tabsList.appendChild(row);
       });
     });
+  }
+
+  function showHoverPreview(url, anchor) {
+    let tooltip = document.getElementById('urlTooltip');
+    if (!tooltip) {
+      tooltip = document.createElement('div');
+      tooltip.id = 'urlTooltip';
+      tooltip.className = 'url-tooltip';
+      document.body.appendChild(tooltip);
+    }
+    
+    tooltip.textContent = url;
+    const rect = anchor.getBoundingClientRect();
+    tooltip.style.left = `${rect.left}px`;
+    tooltip.style.top = `${rect.bottom + 5}px`;
+    tooltip.style.display = 'block';
+  }
+
+  function hideHoverPreview() {
+    const tooltip = document.getElementById('urlTooltip');
+    if (tooltip) tooltip.style.display = 'none';
   }
 
   async function renderRules() {
@@ -186,6 +222,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       type: 'URL',
       matchType: 'Contains',
       value: url,
+      timer: 1,
+      timerUnit: 'minutes',
       keepActive: keepActive,
       created: Date.now()
     };

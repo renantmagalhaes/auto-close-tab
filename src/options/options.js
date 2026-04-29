@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const defaultTimer = document.getElementById('defaultTimer');
-  const timerUnit = document.getElementById('timerUnit');
-  const saveSettings = document.getElementById('saveSettings');
-  const saveMessage = document.getElementById('saveMessage');
   const rulesList = document.getElementById('rulesList');
   const limitRulesList = document.getElementById('limitRulesList');
+  const saveMessage = document.getElementById('saveMessage');
   
   // Auto-close rule form elements
   const addRuleBtn = document.getElementById('addRule');
@@ -14,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const newRuleKeepActive = document.getElementById('newRuleKeepActive');
   const addRuleLegend = document.getElementById('addRuleLegend');
   const cancelEditBtn = document.getElementById('cancelEdit');
+  const newRuleTimer = document.getElementById('newRuleTimer');
+  const newRuleTimerUnit = document.getElementById('newRuleTimerUnit');
 
   // Limit rule form elements
   const addLimitRuleBtn = document.getElementById('addLimitRule');
@@ -31,9 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let editingLimitIndex = -1;
 
   // Load Settings
-  const data = await chrome.storage.local.get(['timer', 'timerUnit', 'rules', 'limitRules', 'theme']);
-  defaultTimer.value = data.timer || 1;
-  timerUnit.value = data.timerUnit || 'minutes';
+  const data = await chrome.storage.local.get(['rules', 'limitRules', 'theme']);
   const theme = data.theme || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
 
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     row.className = 'item-row';
     const protectionText = rule.keepActive ? 'Protected while active' : 'No active protection';
     
-    let subtitle = `Match ${rule.type} using ${rule.matchType} | ${protectionText}`;
+    let subtitle = `Match ${rule.type} | Timer: ${rule.timer || 1} ${rule.timerUnit || 'minutes'} | ${protectionText}`;
     if (category === 'limit') {
       subtitle = `Limit: ${rule.limit} | Timer: ${rule.timer} ${rule.timerUnit} | ${protectionText}`;
     }
@@ -102,6 +99,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     newRuleValue.value = rule.value;
     newRuleType.value = rule.type;
     newRuleMatch.value = rule.matchType;
+    newRuleTimer.value = rule.timer || 1;
+    newRuleTimerUnit.value = rule.timerUnit || 'minutes';
     newRuleKeepActive.checked = rule.keepActive !== false;
     addRuleLegend.textContent = 'Edit Auto-Close Rule';
     addRuleBtn.textContent = 'Save Changes';
@@ -129,6 +128,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     newRuleValue.value = '';
     newRuleType.value = 'URL';
     newRuleMatch.value = 'Contains';
+    newRuleTimer.value = 1;
+    newRuleTimerUnit.value = 'minutes';
     newRuleKeepActive.checked = true;
     addRuleLegend.textContent = 'Add New Auto-Close Rule';
     addRuleBtn.textContent = 'Add Rule';
@@ -155,18 +156,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderRules(data.rules);
   renderLimitRules(data.limitRules);
 
-  // Save Settings
-  saveSettings.addEventListener('click', async () => {
-    const timer = parseFloat(defaultTimer.value);
-    const unit = timerUnit.value;
-    if (isNaN(timer) || timer <= 0) {
-      showMessage('Please enter a valid duration', 'error');
-      return;
-    }
-    await chrome.storage.local.set({ timer, timerUnit: unit });
-    showMessage('Settings saved successfully!', 'success');
-    chrome.runtime.sendMessage({ type: 'STATE_CHANGED' });
-  });
+  // Global settings saved in background.js now handled per rule.
+  // Removing global save logic as requested.
 
   // Add / Edit Auto-Close Rule
   addRuleBtn.addEventListener('click', async () => {
@@ -178,6 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       value,
       type: newRuleType.value,
       matchType: newRuleMatch.value,
+      timer: parseFloat(newRuleTimer.value) || 1,
+      timerUnit: newRuleTimerUnit.value,
       keepActive: newRuleKeepActive.checked,
       created: editingIndex > -1 ? rules[editingIndex].created : Date.now(),
       updated: Date.now()

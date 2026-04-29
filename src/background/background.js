@@ -4,11 +4,9 @@ let limitPendingCloses = new Map();
 
 // Initialize
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.get(['rules', 'limitRules', 'timer', 'timerUnit', 'enabled', 'theme'], (data) => {
+  chrome.storage.local.get(['rules', 'limitRules', 'enabled', 'theme'], (data) => {
     if (!data.rules) chrome.storage.local.set({ rules: [] });
     if (!data.limitRules) chrome.storage.local.set({ limitRules: [] });
-    if (!data.timer) chrome.storage.local.set({ timer: 1 }); // 1 minute default
-    if (!data.timerUnit) chrome.storage.local.set({ timerUnit: 'minutes' });
     if (data.enabled === undefined) chrome.storage.local.set({ enabled: true });
     if (!data.theme) chrome.storage.local.set({ theme: 'dark' });
   });
@@ -78,14 +76,16 @@ async function checkTab(tab, rules) {
 
   if (matchingRule) {
     if (!pendingCloses.has(tab.id)) {
-      const { timer = 1, timerUnit = 'minutes' } = await chrome.storage.local.get(['timer', 'timerUnit']);
+      // Prioritize rule-specific timer, then global timer, finally 1 minute default
+      const timer = matchingRule.timer || 1;
+      const timerUnit = matchingRule.timerUnit || 'minutes';
       const multiplier = timerUnit === 'minutes' ? 60 * 1000 : 1000;
       const closeAt = Date.now() + (timer * multiplier);
       pendingCloses.set(tab.id, { 
         closeAt, 
         keepActive: matchingRule.keepActive !== false 
       });
-      console.log(`Tab ${tab.id} matched auto-close. Scheduled in ${timer} ${timerUnit}.`);
+      console.log(`Tab ${tab.id} matched auto-close "${matchingRule.value}". Scheduled in ${timer} ${timerUnit}.`);
     }
   } else {
     pendingCloses.delete(tab.id);
