@@ -1,6 +1,8 @@
 // Keep track of tabs that are scheduled to be closed
 let pendingCloses = new Map();
 let limitPendingCloses = new Map();
+// Keep track of active setTimeouts for short-duration closes
+let activeTimeouts = new Map();
 
 // Initialize
 chrome.runtime.onInstalled.addListener(() => {
@@ -11,8 +13,8 @@ chrome.runtime.onInstalled.addListener(() => {
     if (!data.theme) chrome.storage.local.set({ theme: 'dark' });
   });
 
-  // Set up periodic check
-  chrome.alarms.create('checkTabs', { periodInMinutes: 0.5 });
+  // Set up periodic check (Fallback)
+  chrome.alarms.create('checkTabs', { periodInMinutes: 1 });
 });
 
 // Listen for messages
@@ -22,25 +24,36 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-// Watch for tab updates
+// Watch for tab updates (Comprehensive events)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
-    checkAllTabs(); // Re-check all for limits too
+  if (changeInfo.status === 'complete' || changeInfo.url) {
+    checkAllTabs();
   }
 });
 
-// Watch for tab activation (switching focus)
-chrome.tabs.onActivated.addListener((activeInfo) => {
+chrome.tabs.onCreated.addListener(() => {
   checkAllTabs();
 });
 
-// Watch for tab removal to clean up maps
+chrome.tabs.onActivated.addListener(() => {
+  checkAllTabs();
+});
+
+chrome.tabs.onHighlighted.addListener(() => {
+  checkAllTabs();
+});
+
+// Watch for tab removal to clean up
 chrome.tabs.onRemoved.addListener((tabId) => {
   pendingCloses.delete(tabId);
   limitPendingCloses.delete(tabId);
+  if (activeTimeouts.has(tabId)) {
+    clearTimeout(activeTimeouts.get(tabId));
+    activeTimeouts.delete(tabId);
+  }
 });
 
-// Periodic alarm
+// Periodic alarm (Safety net)
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'checkTabs') {
     processPendingCloses();
@@ -53,6 +66,8 @@ async function checkAllTabs() {
   if (!data.enabled) {
     pendingCloses.clear();
     limitPendingCloses.clear();
+    activeTimeouts.forEach(t => clearTimeout(t));
+    activeTimeouts.clear();
     return;
   }
 
@@ -76,19 +91,38 @@ async function checkTab(tab, rules) {
 
   if (matchingRule) {
     if (!pendingCloses.has(tab.id)) {
-      // Prioritize rule-specific timer, then global timer, finally 1 minute default
       const timer = matchingRule.timer || 1;
       const timerUnit = matchingRule.timerUnit || 'minutes';
       const multiplier = timerUnit === 'minutes' ? 60 * 1000 : 1000;
-      const closeAt = Date.now() + (timer * multiplier);
+      const delayMs = timer * multiplier;
+      const closeAt = Date.now() + delayMs;
+      
       pendingCloses.set(tab.id, { 
         closeAt, 
         keepActive: matchingRule.keepActive !== false 
       });
-      console.log(`Tab ${tab.id} matched auto-close "${matchingRule.value}". Scheduled in ${timer} ${timerUnit}.`);
+
+      // Aggressive Short-Term Timing: 
+      // If the delay is short, set a real timeout for high precision
+      if (delayMs < 65000) { // Up to 65 seconds
+        if (activeTimeouts.has(tab.id)) clearTimeout(activeTimeouts.get(tab.id));
+        
+        const timeoutId = setTimeout(() => {
+          processPendingCloses();
+          activeTimeouts.delete(tab.id);
+        }, delayMs + 500); // Small buffer
+        
+        activeTimeouts.set(tab.id, timeoutId);
+      }
+
+      console.log(`Tab ${tab.id} matched "${matchingRule.value}". Scheduled in ${timer} ${timerUnit}.`);
     }
   } else {
     pendingCloses.delete(tab.id);
+    if (activeTimeouts.has(tab.id)) {
+      clearTimeout(activeTimeouts.get(tab.id));
+      activeTimeouts.delete(tab.id);
+    }
   }
 }
 

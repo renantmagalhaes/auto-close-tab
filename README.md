@@ -4,6 +4,17 @@ A modern Chrome extension designed to declutter your browser by automatically cl
 
 ![alt text](./assets/menu.png)
 
+### ⏱️ Timer Accuracy & Limitations
+
+Due to Google Chrome's [Alarms API](https://developer.chrome.com/docs/extensions/reference/alarms/) limitations, there are a few things to keep in mind regarding timing:
+
+- **Minimum Reliable Interval**: Chrome enforces a minimum alarm interval of **1 minute**. 
+- **Hybrid Precision**: This extension uses a "Hybrid Timing" system. For rules set to **less than 60 seconds**, we use high-precision timeouts while you are actively using the browser.
+- **Background Throttling**: If the browser is idle or minimized, Chrome may throttle the extension's background processes, potentially delaying auto-close actions for rules under 1 minute until the next "pulse" (usually every 60 seconds).
+- **Efficiency**: This approach ensures maximum battery life and minimum CPU usage while still providing the best possible accuracy for your rules.
+
+---
+
 ## ✨ Features
 
 - **Quick Add**: Open the popup and add any current tab to your auto-close list with one click.

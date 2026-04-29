@@ -10,6 +10,17 @@
       <h1>⚙️ Extension Settings</h1>
       <p id="saveMessage" class="message" style="margin-bottom: 24px; min-height: 20px;"></p>
 
+      <div class="state-box" style="margin-bottom: 32px; background: var(--surface-strong); border-left: 4px solid var(--primary-color); text-align: left; align-items: flex-start; padding: 20px 24px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+          <span class="state-icon" style="font-size: 20px;">⏱️</span>
+          <strong style="color: var(--text-primary); font-size: 14px;">Timer Accuracy Note</strong>
+        </div>
+        <p style="font-size: 13px; line-height: 1.5; color: var(--text-secondary); margin: 0;">
+          Due to browser limitations (Chrome Alarms API), rules set to <strong>less than 1 minute</strong> may experience slight delays. 
+          While we use a high-precision hybrid system for active browsing, auto-close actions may still be throttled by Chrome when the browser is idle.
+        </p>
+      </div>
+
 
       <fieldset>
         <legend>Manage Rules</legend>
