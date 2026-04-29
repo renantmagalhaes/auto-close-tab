@@ -9,24 +9,7 @@
     <div class="options-container">
       <h1>⚙️ Extension Settings</h1>
 
-      <fieldset>
-        <legend>General Settings</legend>
-        <div class="form-group">
-          <label for="defaultTimer">Auto-close timer duration</label>
-          <div style="display: flex; gap: 8px;">
-            <input type="number" id="defaultTimer" min="1" step="1" value="1" style="flex: 1;">
-            <select id="timerUnit" style="width: 120px;">
-              <option value="seconds">Seconds</option>
-              <option value="minutes" selected>Minutes</option>
-            </select>
-          </div>
-          <p class="form-hint">
-            Tabs matching a rule will close after this duration.
-          </p>
-        </div>
-        <button class="btn btn-primary btn-options" id="saveSettings" style="margin-top: 16px;">Save Settings</button>
-        <p id="saveMessage" class="message"></p>
-      </fieldset>
+
 
       <fieldset>
         <legend>Manage Rules</legend>
@@ -63,7 +46,17 @@
               <option value="Exact">Exact Match</option>
               <option value="Regex">Regular Expression</option>
             </select>
+          <div class="form-group">
+            <label for="newRuleTimer">Auto-close Timer</label>
+            <div style="display: flex; gap: 4px;">
+              <input type="number" id="newRuleTimer" min="1" step="1" value="1" style="flex: 1;">
+              <select id="newRuleTimerUnit" style="width: 80px;">
+                <option value="seconds">Sec</option>
+                <option value="minutes" selected>Min</option>
+              </select>
+            </div>
           </div>
+        </div>
           <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px;">
             <input type="checkbox" id="newRuleKeepActive" checked style="width: auto;">
             <label for="newRuleKeepActive" style="margin-bottom: 0;">Protect tab while in focus</label>
