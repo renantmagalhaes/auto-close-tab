@@ -372,6 +372,7 @@ input:checked + .slider:before {
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   transition: all 0.15s ease;
+  overflow: hidden; /* Prevent content overflow */
 }
 
 .item-row:hover {
@@ -389,27 +390,32 @@ input:checked + .slider:before {
   object-fit: contain;
 }
 
+.item-row .header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0; /* Prevent buttons from being pushed out */
+  margin-left: auto;
+}
+
 .item-info {
   flex: 1;
   min-width: 0;
+  margin-right: 16px;
 }
 
 .item-title {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  word-break: break-all; /* Force wrap for long URLs */
+  line-height: 1.4;
 }
 
 .item-subtitle {
   font-size: 11px;
   color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-all;
 }
 
 .item-action {
@@ -487,9 +493,10 @@ input:checked + .slider:before {
 
 /* Options Container */
 .options-container {
-  max-width: 800px;
+  width: 80%;
+  max-width: 1400px; /* Sensible upper limit for ultra-wide monitors */
   margin: 40px auto;
-  padding: 40px;
+  padding: 40px 60px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   background: var(--surface-accent);
@@ -497,8 +504,8 @@ input:checked + .slider:before {
 }
 
 .options-container h1 {
-  margin-bottom: 32px;
-  font-size: 32px;
+  margin-bottom: 40px;
+  font-size: 36px;
   font-weight: 800;
   letter-spacing: -0.04em;
 }
