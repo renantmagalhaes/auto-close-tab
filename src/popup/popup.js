@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const openSettings = document.getElementById('openSettings');
   const themeToggle = document.getElementById('themeToggle');
 
+  const tabSearch = document.getElementById('tabSearch');
+  const clearSearch = document.getElementById('clearSearch');
+
   // Load initial state
   const data = await chrome.storage.local.get(['rules', 'enabled', 'theme']);
   const rules = data.rules || [];
@@ -34,6 +37,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.storage.local.set({ theme: newTheme });
   });
 
+  // Render initial lists
+  renderTabs();
+  renderRules();
+  renderLimitRules();
+
+  // Tab Search listeners
+  tabSearch.addEventListener('input', () => {
+    const query = tabSearch.value.trim();
+    clearSearch.style.display = query ? 'block' : 'none';
+    renderTabs();
+  });
+
+  clearSearch.addEventListener('click', () => {
+    tabSearch.value = '';
+    clearSearch.style.display = 'none';
+    tabSearch.focus();
+    renderTabs();
+  });
+
   // Open Settings / Manage
   const manageLinks = [openSettings, document.getElementById('manageRules'), document.getElementById('manageLimits')];
   manageLinks.forEach(link => {
@@ -47,14 +69,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Render Functions
   function renderTabs() {
+    const query = tabSearch.value.toLowerCase();
     chrome.tabs.query({ currentWindow: true }, (tabs) => {
       tabsList.innerHTML = '';
-      if (tabs.length === 0) {
-        tabsList.innerHTML = '<div class="state-box"><p>No open tabs</p></div>';
+      
+      const filteredTabs = tabs.filter(tab => 
+        tab.title.toLowerCase().includes(query) || 
+        tab.url.toLowerCase().includes(query)
+      );
+
+      if (filteredTabs.length === 0) {
+        tabsList.innerHTML = `
+          <div class="state-box">
+            <p>${query ? 'No matching tabs found' : 'No open tabs'}</p>
+          </div>
+        `;
         return;
       }
 
-      tabs.forEach(tab => {
+      filteredTabs.forEach(tab => {
         const row = document.createElement('div');
         row.className = 'item-row';
         const iconUrl = tab.favIconUrl || 'https://www.google.com/s2/favicons?domain=chrome';
@@ -66,8 +99,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
           <div class="header-actions">
             <button class="icon-button protection-toggle" title="Protect while active" data-protected="true">🛡️</button>
-            <button class="item-action add-auto" title="Add auto-close rule">Add</button>
-            <button class="item-action add-limit" title="Add instance limit (1)" style="background: var(--warning-color);">Limit</button>
+            <button class="item-action add-auto" title="Add auto-close rule">⏱️ Auto-Close</button>
+            <button class="item-action add-limit" title="Add instance limit (1)" style="background: var(--warning-color);">🔢 Limit</button>
           </div>
         `;
 

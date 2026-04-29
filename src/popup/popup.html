@@ -25,7 +25,13 @@
 
       <!-- Tabs List Section -->
       <div class="results-section tabs-section">
-        <h2 class="section-label">Open Tabs (Click to Auto-Close)</h2>
+        <div class="search-section">
+          <div class="search-input-wrap">
+            <input type="text" id="tabSearch" class="search-input" placeholder="Search open tabs...">
+            <span class="search-clear" id="clearSearch" style="display: none;">✕</span>
+          </div>
+        </div>
+        <h2 class="section-label" style="padding-top: 12px;">Open Tabs (Click to Auto-Close)</h2>
         <div class="results-list" id="tabsList">
           <div class="state-box">
             <span class="state-icon">🔄</span>
