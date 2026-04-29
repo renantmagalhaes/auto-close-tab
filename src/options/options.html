@@ -35,36 +35,92 @@
         </div>
       </fieldset>
 
-      <fieldset id="addRuleSection">
-        <legend id="addRuleLegend">Add New Rule</legend>
-        <div class="form-group">
-          <label for="newRuleValue">Rule Value (URL or Title snippet)</label>
-          <input type="text" id="newRuleValue" placeholder="e.g. youtube.com">
-        </div>
-        <div class="form-group">
-          <label for="newRuleType">Match Against</label>
-          <select id="newRuleType">
-            <option value="URL">URL</option>
-            <option value="Title">Page Title</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="newRuleMatch">Match Type</label>
-          <select id="newRuleMatch">
-            <option value="Contains">Contains</option>
-            <option value="Exact">Exact Match</option>
-            <option value="Regex">Regular Expression</option>
-          </select>
-        </div>
-        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px;">
-          <input type="checkbox" id="newRuleKeepActive" checked style="width: auto;">
-          <label for="newRuleKeepActive" style="margin-bottom: 0;">Protect tab while in focus</label>
-        </div>
-        <div style="display: flex; gap: 8px; margin-top: 12px;">
-          <button class="btn btn-primary btn-options" id="addRule" style="flex: 1;">Add Rule</button>
-          <button class="btn btn-options" id="cancelEdit" style="display: none; flex: 1;">Cancel</button>
+      <fieldset>
+        <legend>Manage Instance Limits</legend>
+        <div id="limitRulesList" class="results-list">
+          <!-- Limit rules will be injected here -->
         </div>
       </fieldset>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <fieldset id="addRuleSection">
+          <legend id="addRuleLegend">Add New Auto-Close Rule</legend>
+          <div class="form-group">
+            <label for="newRuleValue">Rule Value (URL or Title snippet)</label>
+            <input type="text" id="newRuleValue" placeholder="e.g. youtube.com">
+          </div>
+          <div class="form-group">
+            <label for="newRuleType">Match Against</label>
+            <select id="newRuleType">
+              <option value="URL">URL</option>
+              <option value="Title">Page Title</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newRuleMatch">Match Type</label>
+            <select id="newRuleMatch">
+              <option value="Contains">Contains</option>
+              <option value="Exact">Exact Match</option>
+              <option value="Regex">Regular Expression</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px;">
+            <input type="checkbox" id="newRuleKeepActive" checked style="width: auto;">
+            <label for="newRuleKeepActive" style="margin-bottom: 0;">Protect tab while in focus</label>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn btn-primary btn-options" id="addRule" style="flex: 1;">Add Rule</button>
+            <button class="btn btn-options" id="cancelEdit" style="display: none; flex: 1;">Cancel</button>
+          </div>
+        </fieldset>
+
+        <fieldset id="addLimitRuleSection">
+          <legend id="addLimitRuleLegend">Add New Instance Limit</legend>
+          <div class="form-group">
+            <label for="newLimitValue">Rule Value (URL or Title snippet)</label>
+            <input type="text" id="newLimitValue" placeholder="e.g. gmail.com">
+          </div>
+          <div class="form-group">
+            <label for="newLimitType">Match Against</label>
+            <select id="newLimitType">
+              <option value="URL">URL</option>
+              <option value="Title">Page Title</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newLimitMatch">Match Type</label>
+            <select id="newLimitMatch">
+              <option value="Contains">Contains</option>
+              <option value="Exact">Exact Match</option>
+              <option value="Regex">Regular Expression</option>
+            </select>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label for="newLimitCount">Instance Limit</label>
+              <input type="number" id="newLimitCount" min="1" step="1" value="1">
+            </div>
+            <div class="form-group">
+              <label for="newLimitTimer">Timer (Delay)</label>
+              <div style="display: flex; gap: 4px;">
+                <input type="number" id="newLimitTimer" min="1" step="1" value="1" style="flex: 1;">
+                <select id="newLimitTimerUnit" style="width: 70px; padding: 12px 4px;">
+                  <option value="seconds">Sec</option>
+                  <option value="minutes" selected>Min</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-top: 4px;">
+            <input type="checkbox" id="newLimitKeepActive" checked style="width: auto;">
+            <label for="newLimitKeepActive" style="margin-bottom: 0;">Protect active tab</label>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button class="btn btn-primary btn-options" id="addLimitRule" style="flex: 1;">Add Limit</button>
+            <button class="btn btn-options" id="cancelLimitEdit" style="display: none; flex: 1;">Cancel</button>
+          </div>
+        </fieldset>
+      </div>
     </div>
     <script src="options.js"></script>
   </body>
