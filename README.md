@@ -63,18 +63,21 @@ Due to Google Chrome's [Alarms API](https://developer.chrome.com/docs/extensions
 
 ## 🚀 How to Use
 
-### Using the Popup
-1. Click the extension icon in your toolbar.
-2. The **Open Tabs** list shows all tabs in your current window.
-3. Click the 🛡️ icon to decide if the tab should be protected while you are looking at it.
-4. Click **Add** to create a rule for that tab's URL.
-5. The **Active Rules** section shows everything currently being monitored.
+### Using the Popup Dashboard
+1. **Open the Dashboard**: Click the extension icon in your toolbar to open the high-density 800x600px dashboard.
+2. **Search Open Tabs**: Use the search bar at the top to instantly filter your open tabs by title or URL.
+3. **Quick-Add Actions**:
+   - **🛡️ Protect**: Click the shield icon to toggle protection. If active (bright), the tab won't close if you are currently looking at it.
+   - **⏱️ Auto-Close**: Instantly schedule the tab to close after **1 minute**.
+   - **🔢 Limit**: Instantly set a **1-instance limit** for that site.
+4. **Hover Preview**: For very long URLs that are truncated with "...", simply **hover your mouse over the link for 1 second** to see the full URL in a preview window.
+5. **Manage Rules**: Click the **Manage ⚙️** link in the footer summary boxes to jump directly to the full settings page.
 
 ### Advanced Configuration
-1. Click the ⚙️ icon in the popup to open the **Options Page**.
-2. **General Settings**: Set your preferred auto-close duration (e.g., 5 minutes or 30 seconds).
-3. **Manage Rules**: View all your rules. Click ✏️ to edit or 🗑️ to delete.
-4. **Add New Rule**: Manually create rules with specific match types (URL/Title/Regex).
+1. **Site-Specific Timers**: In the Settings page, you can now set a unique auto-close duration for every single rule. No more global timers—complete control per site!
+2. **Manage Instance Limits**: View and edit your active limits. For example, you can allow 3 tabs of `youtube.com` but only 1 of `reddit.com`.
+3. **Match Types**: Choose between **Contains**, **Exact**, or **Regex** to fine-tune how the extension identifies tabs to close.
+4. **Dashboard Summaries**: The popup shows a clean count of your active rules and limits at the bottom, keeping your main view focused on your current tabs.
 
 ## 🔒 Privacy
 
