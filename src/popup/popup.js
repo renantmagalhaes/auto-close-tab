@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const theme = data.theme || 'dark';
 
   extensionEnabled.checked = enabled;
-  statusMessage.textContent = enabled ? 'Extension is Active' : 'Extension is Paused';
+  statusMessage.textContent = enabled ? 'Active' : 'Paused';
   document.documentElement.setAttribute('data-theme', theme);
   themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   extensionEnabled.addEventListener('change', (e) => {
     const isEnabled = e.target.checked;
     chrome.storage.local.set({ enabled: isEnabled });
-    statusMessage.textContent = isEnabled ? 'Extension is Active' : 'Extension is Paused';
+    statusMessage.textContent = isEnabled ? 'Active' : 'Paused';
     chrome.runtime.sendMessage({ type: 'STATE_CHANGED' });
   });
 

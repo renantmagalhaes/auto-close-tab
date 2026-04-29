@@ -11,19 +11,15 @@
       <div class="header">
         <h1>⏱️ Auto Close Tab</h1>
         <div class="header-actions">
+          <div style="display: flex; align-items: center; gap: 8px; margin-right: 12px; padding-right: 12px; border-right: 1px solid var(--border-color);">
+            <span id="statusMessage" style="font-size: 11px; font-weight: 700; color: var(--text-secondary);">Active</span>
+            <label class="switch">
+              <input type="checkbox" id="extensionEnabled" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
           <button class="icon-button" id="themeToggle" title="Toggle theme">🌙</button>
           <button class="icon-button" id="openSettings" title="Settings">⚙️</button>
-        </div>
-      </div>
-
-      <!-- Status/Quick Toggle -->
-      <div class="status-section">
-        <p class="status-message" id="statusMessage">Extension is Active</p>
-        <div class="status-toggle">
-          <label class="switch">
-            <input type="checkbox" id="extensionEnabled" checked>
-            <span class="slider round"></span>
-          </label>
         </div>
       </div>
 
