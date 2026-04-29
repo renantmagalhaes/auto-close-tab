@@ -34,9 +34,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.storage.local.set({ theme: newTheme });
   });
 
-  // Open Settings
-  openSettings.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+  // Open Settings / Manage
+  const manageLinks = [openSettings, document.getElementById('manageRules'), document.getElementById('manageLimits')];
+  manageLinks.forEach(link => {
+    if (link) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.runtime.openOptionsPage();
+      });
+    }
   });
 
   // Render Functions
@@ -103,90 +109,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function renderRules() {
     const { rules = [] } = await chrome.storage.local.get('rules');
-    rulesList.innerHTML = '';
-    if (rules.length === 0) {
-      rulesList.innerHTML = '<div class="state-box"><p>No active rules</p></div>';
-      return;
+    const rulesCount = document.getElementById('rulesCount');
+    if (rulesCount) {
+      rulesCount.textContent = `${rules.length} Active Rule${rules.length !== 1 ? 's' : ''}`;
     }
-
-    rules.forEach((rule, index) => {
-      const row = document.createElement('div');
-      row.className = 'item-row';
-      const protectionOpacity = rule.keepActive ? '1' : '0.4';
-      row.innerHTML = `
-        <div class="item-info">
-          <div class="item-title">${rule.value}</div>
-          <div class="item-subtitle">Match ${rule.type} | ${rule.matchType}</div>
-        </div>
-        <div class="header-actions">
-          <button class="icon-button rule-protection-toggle" title="${rule.keepActive ? 'Protect while active' : 'No active protection'}" style="opacity: ${protectionOpacity}">🛡️</button>
-          <button class="item-action remove" data-index="${index}">Remove</button>
-        </div>
-      `;
-
-      row.querySelector('.rule-protection-toggle').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleRuleProtection(index);
-      });
-
-      row.querySelector('.remove').addEventListener('click', (e) => {
-        e.stopPropagation();
-        removeRule(index);
-      });
-
-      rulesList.appendChild(row);
-    });
   }
 
   async function renderLimitRules() {
     const { limitRules = [] } = await chrome.storage.local.get('limitRules');
-    const limitRulesList = document.getElementById('limitRulesList');
-    limitRulesList.innerHTML = '';
-    
-    if (limitRules.length === 0) {
-      limitRulesList.innerHTML = '<div class="state-box"><p>No active limits</p></div>';
-      return;
+    const limitsCount = document.getElementById('limitsCount');
+    if (limitsCount) {
+      limitsCount.textContent = `${limitRules.length} Active Limit${limitRules.length !== 1 ? 's' : ''}`;
     }
-
-    const tabs = await chrome.tabs.query({});
-
-    limitRules.forEach((rule, index) => {
-      const matchingTabs = tabs.filter(tab => {
-        const target = rule.type === 'URL' ? tab.url : tab.title;
-        if (!target) return false;
-        if (rule.matchType === 'Exact') return target === rule.value;
-        if (rule.matchType === 'Contains') return target.includes(rule.value);
-        if (rule.matchType === 'Regex') {
-          try { return new RegExp(rule.value).test(target); } catch(e) { return false; }
-        }
-        return false;
-      });
-
-      const row = document.createElement('div');
-      row.className = 'item-row';
-      const countColor = matchingTabs.length > rule.limit ? 'var(--error-color)' : 'var(--success-color)';
-      
-      row.innerHTML = `
-        <div class="item-info">
-          <div class="item-title">${rule.value}</div>
-          <div class="item-subtitle">Limit: ${rule.limit} | <span style="color: ${countColor}; font-weight: bold;">${matchingTabs.length} open</span></div>
-        </div>
-        <div class="header-actions">
-          <button class="item-action remove-limit" data-index="${index}">Remove</button>
-        </div>
-      `;
-
-      row.querySelector('.remove-limit').addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const { limitRules: currentRules = [] } = await chrome.storage.local.get('limitRules');
-        currentRules.splice(index, 1);
-        await chrome.storage.local.set({ limitRules: currentRules });
-        renderLimitRules();
-        chrome.runtime.sendMessage({ type: 'LIMIT_RULES_CHANGED' });
-      });
-
-      limitRulesList.appendChild(row);
-    });
   }
 
   async function addLimitRule(url, title, keepActive = true) {

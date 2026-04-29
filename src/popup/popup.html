@@ -24,10 +24,9 @@
       </div>
 
       <!-- Tabs List Section -->
-      <div class="results-section">
+      <div class="results-section tabs-section">
         <h2 class="section-label">Open Tabs (Click to Auto-Close)</h2>
         <div class="results-list" id="tabsList">
-          <!-- Tabs will be injected here -->
           <div class="state-box">
             <span class="state-icon">🔄</span>
             <p>Loading open tabs...</p>
@@ -35,24 +34,24 @@
         </div>
       </div>
 
-      <!-- Active Rules Section -->
-      <div class="results-section">
-        <h2 class="section-label">Active Auto-Close Rules</h2>
-        <div class="results-list" id="rulesList">
-          <!-- Rules will be injected here -->
-          <div class="state-box">
-            <p>No active rules</p>
+      <!-- Active Rules Summary -->
+      <div class="summary-section rules-section">
+        <div class="summary-content">
+          <span class="section-label">Auto-Close Rules</span>
+          <div class="summary-data">
+            <span id="rulesCount">0 Active</span>
+            <a href="#" class="manage-link" id="manageRules">Manage ⚙️</a>
           </div>
         </div>
       </div>
 
-      <!-- Instance Limits Section -->
-      <div class="results-section">
-        <h2 class="section-label">Instance Limits</h2>
-        <div class="results-list" id="limitRulesList">
-          <!-- Limit rules will be injected here -->
-          <div class="state-box">
-            <p>No active limits</p>
+      <!-- Instance Limits Summary -->
+      <div class="summary-section limits-section">
+        <div class="summary-content">
+          <span class="section-label">Instance Limits</span>
+          <div class="summary-data">
+            <span id="limitsCount">0 Active</span>
+            <a href="#" class="manage-link" id="manageLimits">Manage ⚙️</a>
           </div>
         </div>
       </div>
